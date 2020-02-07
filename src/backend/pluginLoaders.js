@@ -42,6 +42,7 @@ opaque type PluginGraphs = {|
 |};
 
 type MirrorEnv = {
+  +initiativesDirectory: ?string,
   +githubToken: ?GithubToken,
   +reporter: TaskReporter,
   +cache: CacheProvider,

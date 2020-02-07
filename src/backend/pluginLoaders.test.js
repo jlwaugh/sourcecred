@@ -106,6 +106,7 @@ describe("src/backend/pluginLoaders", () => {
       const cache = mockCacheProvider();
       const reporter = new TestTaskReporter();
       const githubToken = null;
+      const initiativesDirectory = null;
       const project = createProject({
         id: "has-discourse",
         discourseServer: {serverUrl: "http://foo.bar"},
@@ -114,7 +115,7 @@ describe("src/backend/pluginLoaders", () => {
       // When
       await PluginLoaders.updateMirror(
         loaders,
-        {githubToken, cache, reporter},
+        {githubToken, cache, reporter, initiativesDirectory},
         project
       );
 
@@ -133,6 +134,7 @@ describe("src/backend/pluginLoaders", () => {
       const loaders = mockPluginLoaders();
       const cache = mockCacheProvider();
       const githubToken = null;
+      const initiativesDirectory = null;
       const reporter = new TestTaskReporter();
       const project = createProject({
         id: "has-github",
@@ -142,7 +144,7 @@ describe("src/backend/pluginLoaders", () => {
       // When
       const p = PluginLoaders.updateMirror(
         loaders,
-        {githubToken, cache, reporter},
+        {githubToken, cache, reporter, initiativesDirectory},
         project
       );
 
@@ -158,6 +160,7 @@ describe("src/backend/pluginLoaders", () => {
       const cache = mockCacheProvider();
       const githubToken = exampleGithubToken;
       const reporter = new TestTaskReporter();
+      const initiativesDirectory = null;
       const project = createProject({
         id: "has-github",
         repoIds: [exampleRepoId],
@@ -166,7 +169,7 @@ describe("src/backend/pluginLoaders", () => {
       // When
       await PluginLoaders.updateMirror(
         loaders,
-        {githubToken, cache, reporter},
+        {githubToken, cache, reporter, initiativesDirectory},
         project
       );
 
