@@ -3,7 +3,6 @@
 import path from "path";
 import fs from "fs-extra";
 import Database from "better-sqlite3";
-import stringify from "json-stable-stringify";
 import {type Project, projectToJSON} from "../core/project";
 import {directoryForProjectId} from "../core/project_io";
 import * as WeightedGraph from "../core/weightedGraph";
@@ -13,6 +12,15 @@ import type {
   ProjectStorageExtras,
 } from "./projectStorage";
 import {toJSON as pluginsToJSON} from "../analysis/pluginDeclaration";
+import {TimelineCred} from "../analysis/timeline/timelineCred";
+import {compatWriter} from "./compatIO";
+
+const writers = {
+  project: compatWriter(projectToJSON, "Project"),
+  weightedGraph: compatWriter(WeightedGraph.toJSON, "WeightedGraph"),
+  cred: compatWriter(TimelineCred.toJSON, "TimelineCred"),
+  pluginDeclarations: compatWriter(pluginsToJSON, "PluginDeclarations"),
+};
 
 /**
  * Represents a SourceCred data directory.
@@ -40,25 +48,19 @@ export class DataDirectory implements CacheProvider, ProjectStorageProvider {
       project.id,
       this._sourcecredDirectory
     );
+    const fileName = (name: string) => path.join(projectDirectory, name);
     await fs.mkdirp(projectDirectory);
-    const writeFile = async (name: string, data: string) => {
-      const fileName = path.join(projectDirectory, name);
-      await fs.writeFile(fileName, data);
-    };
-    writeFile("project.json", stringify(projectToJSON(project)));
+    writers.project(fileName("project.json"), project);
     if (weightedGraph) {
-      writeFile(
-        "weightedGraph.json",
-        stringify(WeightedGraph.toJSON(weightedGraph))
-      );
+      writers.weightedGraph(fileName("weightedGraph.json"), weightedGraph);
     }
     if (cred) {
-      writeFile("cred.json", stringify(cred.toJSON()));
+      writers.cred(fileName("cred.json"), cred);
     }
     if (pluginDeclarations) {
-      writeFile(
-        "pluginDeclarations.json",
-        stringify(pluginsToJSON(pluginDeclarations))
+      writers.pluginDeclarations(
+        fileName("pluginDeclarations.json"),
+        pluginDeclarations
       );
     }
   }

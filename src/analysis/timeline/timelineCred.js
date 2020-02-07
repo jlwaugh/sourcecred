@@ -162,6 +162,10 @@ export class TimelineCred {
     return toCompat(COMPAT_INFO, rawJSON);
   }
 
+  static toJSON(c: TimelineCred): TimelineCredJSON {
+    return c.toJSON();
+  }
+
   static fromJSON(j: TimelineCredJSON): TimelineCred {
     const json = fromCompat(COMPAT_INFO, j);
     const {
@@ -219,7 +223,7 @@ export class TimelineCred {
 
 const COMPAT_INFO = {type: "sourcecred/timelineCred", version: "0.6.0"};
 
-export opaque type TimelineCredJSON = Compatible<{|
+export type TimelineCredJSON = Compatible<{|
   +weightedGraphJSON: WeightedGraphJSON,
   +paramsJSON: TimelineCredParametersJSON,
   +pluginsJSON: $ReadOnlyArray<PluginDeclaration>,
