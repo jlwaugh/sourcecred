@@ -10,6 +10,7 @@ import {type GithubToken} from "../plugins/github/token";
 import {type Loader as GithubLoader} from "../plugins/github/loader";
 import {type Loader as IdentityLoader} from "../plugins/identity/loader";
 import {type Loader as DiscourseLoader} from "../plugins/discourse/loader";
+import {type Loader as InitiativesLoader} from "../plugins/initiatives/loader";
 
 /**
  * A type combining all known plugin Loader interfaces.
@@ -21,6 +22,7 @@ export type PluginLoaders = {|
   +github: GithubLoader,
   +discourse: DiscourseLoader,
   +identity: IdentityLoader,
+  +initiatives: InitiativesLoader,
 |};
 
 /**

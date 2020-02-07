@@ -16,6 +16,7 @@ import * as PluginLoaders from "./pluginLoaders";
 import {default as githubLoader} from "../plugins/github/loader";
 import {default as identityLoader} from "../plugins/identity/loader";
 import {default as discourseLoader} from "../plugins/discourse/loader";
+import {default as initiativesLoader} from "../plugins/initiatives/loader";
 import {type PluginDeclarations} from "../analysis/pluginDeclaration";
 
 export type LoadResult = {|
@@ -84,6 +85,7 @@ export class LoadContext {
     github: githubLoader,
     discourse: discourseLoader,
     identity: identityLoader,
+    initiatives: initiativesLoader,
   };
 
   /**

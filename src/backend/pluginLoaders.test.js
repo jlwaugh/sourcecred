@@ -18,6 +18,7 @@ export function createWG(name: string) {
 const mockGraphs = {
   github: createWG("github"),
   discourse: createWG("discourse"),
+  initiatives: createWG("initiatives"),
   contracted: createWG("identity-contracted"),
 };
 
@@ -25,6 +26,8 @@ const fakes = {
   githubDeclaration: ({fake: "githubDeclaration"}: any),
   discourseDeclaration: ({fake: "discourseDeclaration"}: any),
   identityDeclaration: ({fake: "identityDeclaration"}: any),
+  initiativesDeclaration: ({fake: "initiativesDeclaration"}: any),
+  loadedDirectory: ({fake: "loadedDirectory"}: any),
 };
 
 const mockCacheProvider = (): CacheProvider => ({
@@ -45,6 +48,11 @@ const mockPluginLoaders = () => ({
   identity: {
     declaration: jest.fn().mockReturnValue(fakes.identityDeclaration),
     contractIdentities: jest.fn().mockReturnValue(mockGraphs.contracted),
+  },
+  initiatives: {
+    declaration: jest.fn().mockReturnValue(fakes.initiativesDeclaration),
+    loadDirectory: jest.fn().mockResolvedValue(fakes.loadedDirectory),
+    createGraph: jest.fn().mockResolvedValue(mockGraphs.initiatives),
   },
 });
 
