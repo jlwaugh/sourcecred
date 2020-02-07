@@ -24,7 +24,9 @@ const mockGraphs = {
 
 const fakes = {
   githubDeclaration: ({fake: "githubDeclaration"}: any),
+  githubReferences: ({fake: "githubReferences"}: any),
   discourseDeclaration: ({fake: "discourseDeclaration"}: any),
+  discourseReferences: ({fake: "discourseReferences"}: any),
   identityDeclaration: ({fake: "identityDeclaration"}: any),
   initiativesDeclaration: ({fake: "initiativesDeclaration"}: any),
   loadedDirectory: ({fake: "loadedDirectory"}: any),
@@ -38,11 +40,13 @@ const mockPluginLoaders = () => ({
   github: {
     declaration: jest.fn().mockReturnValue(fakes.githubDeclaration),
     updateMirror: jest.fn(),
+    referenceDetector: jest.fn().mockResolvedValue(fakes.githubReferences),
     createGraph: jest.fn().mockResolvedValue(mockGraphs.github),
   },
   discourse: {
     declaration: jest.fn().mockReturnValue(fakes.discourseDeclaration),
     updateMirror: jest.fn(),
+    referenceDetector: jest.fn().mockResolvedValue(fakes.discourseReferences),
     createGraph: jest.fn().mockResolvedValue(mockGraphs.discourse),
   },
   identity: {

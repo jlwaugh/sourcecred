@@ -11,6 +11,10 @@ import {type Loader as GithubLoader} from "../plugins/github/loader";
 import {type Loader as IdentityLoader} from "../plugins/identity/loader";
 import {type Loader as DiscourseLoader} from "../plugins/discourse/loader";
 import {type Loader as InitiativesLoader} from "../plugins/initiatives/loader";
+import {
+  type ReferenceDetector,
+  CascadingReferenceDetector,
+} from "../core/references";
 
 /**
  * A type combining all known plugin Loader interfaces.
@@ -100,6 +104,28 @@ export async function updateMirror(
   return {project, cache};
 }
 
+export async function createReferenceDetector(
+  {github, discourse}: $Shape<PluginLoaders>,
+  {githubToken}: GraphEnv,
+  {cache, project}: CachedProject
+): Promise<ReferenceDetector> {
+  const refs = [];
+  if (project.repoIds.length) {
+    if (!githubToken) {
+      throw new Error("Tried to load GitHub, but no GitHub token set");
+    }
+    refs.push(
+      await github.referenceDetector(project.repoIds, githubToken, cache)
+    );
+  }
+  if (project.discourseServer) {
+    refs.push(
+      await discourse.referenceDetector(project.discourseServer, cache)
+    );
+  }
+  return new CascadingReferenceDetector(refs);
+}
+
 /**
  * Creates PluginGraphs containing all plugins requested by the Project.
  */
@@ -109,6 +135,7 @@ export async function createPluginGraphs(
   {cache, project}: CachedProject
 ): Promise<PluginGraphs> {
   const tasks: Promise<WeightedGraphT>[] = [];
+
   if (project.discourseServer) {
     tasks.push(discourse.createGraph(project.discourseServer, cache));
   }
