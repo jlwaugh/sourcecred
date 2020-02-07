@@ -1,6 +1,7 @@
 // @flow
 
 import {type CacheProvider} from "./cache";
+import {type ReferenceDetector} from "../core/references";
 import * as WeightedGraph from "../core/weightedGraph";
 import {node as graphNode} from "../core/graphTestUtil";
 import {createProject} from "../core/project";
@@ -34,6 +35,10 @@ const fakes = {
 
 const mockCacheProvider = (): CacheProvider => ({
   database: jest.fn(),
+});
+
+const mockReferenceDetector = (): ReferenceDetector => ({
+  addressFromUrl: jest.fn(),
 });
 
 const mockPluginLoaders = () => ({
@@ -200,6 +205,7 @@ describe("src/backend/pluginLoaders", () => {
   describe("createPluginGraphs", () => {
     it("should create discourse graph", async () => {
       // Given
+      const references = mockReferenceDetector();
       const loaders = mockPluginLoaders();
       const cache = mockCacheProvider();
       const githubToken = null;
@@ -213,7 +219,8 @@ describe("src/backend/pluginLoaders", () => {
       const pluginGraphs = await PluginLoaders.createPluginGraphs(
         loaders,
         {githubToken},
-        cachedProject
+        cachedProject,
+        references
       );
 
       // Then
@@ -231,6 +238,7 @@ describe("src/backend/pluginLoaders", () => {
 
     it("fail when missing GithubToken", async () => {
       // Given
+      const references = mockReferenceDetector();
       const loaders = mockPluginLoaders();
       const cache = mockCacheProvider();
       const githubToken = null;
@@ -244,7 +252,8 @@ describe("src/backend/pluginLoaders", () => {
       const p = PluginLoaders.createPluginGraphs(
         loaders,
         {githubToken},
-        cachedProject
+        cachedProject,
+        references
       );
 
       // Then
@@ -255,6 +264,7 @@ describe("src/backend/pluginLoaders", () => {
 
     it("should create github graph", async () => {
       // Given
+      const references = mockReferenceDetector();
       const loaders = mockPluginLoaders();
       const cache = mockCacheProvider();
       const githubToken = exampleGithubToken;
@@ -268,7 +278,8 @@ describe("src/backend/pluginLoaders", () => {
       const pluginGraphs = await PluginLoaders.createPluginGraphs(
         loaders,
         {githubToken},
-        cachedProject
+        cachedProject,
+        references
       );
 
       // Then
