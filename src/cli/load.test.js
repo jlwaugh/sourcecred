@@ -179,7 +179,7 @@ describe("cli/load", () => {
         await expectFailure({
           args: ["foo/bar", "--weights", weightsFile],
           message: [
-            expect.stringMatching("^Error: Could not find the weights file"),
+            expect.stringMatching("^Error: Could not find Weights file at:"),
           ],
         });
       });
@@ -190,7 +190,7 @@ describe("cli/load", () => {
         await expectFailure({
           args: ["foo/bar", "--weights", weightsFile],
           message: [
-            expect.stringMatching("^Error: provided weights file is invalid"),
+            expect.stringMatching("^Error: Provided Weights file is invalid:"),
           ],
         });
       });

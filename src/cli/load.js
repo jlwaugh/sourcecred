@@ -9,12 +9,12 @@ import * as Weights from "../core/weights";
 import {projectFromJSON} from "../core/project";
 import {load} from "../api/load";
 import {specToProject} from "../plugins/github/specToProject";
-import fs from "fs-extra";
 import {type PluginDeclaration} from "../analysis/pluginDeclaration";
 import {declaration as discourseDeclaration} from "../plugins/discourse/declaration";
 import {declaration as githubDeclaration} from "../plugins/github/declaration";
 import {declaration as identityDeclaration} from "../plugins/identity/declaration";
 import {defaultParams} from "../analysis/timeline/params";
+import {compatReader} from "../backend/compatIO";
 
 function usage(print: (string) => void): void {
   print(
@@ -152,33 +152,8 @@ const loadCommand: Command = async (args, std) => {
   return 0;
 };
 
-const loadWeightOverrides = async (path: string) => {
-  if (!(await fs.exists(path))) {
-    throw new Error("Could not find the weights file");
-  }
-
-  const raw = await fs.readFile(path, "utf-8");
-  const weightsJSON = JSON.parse(raw);
-  try {
-    return Weights.fromJSON(weightsJSON);
-  } catch (e) {
-    throw new Error(`provided weights file is invalid:\n${e}`);
-  }
-};
-
-const loadProject = async (path: string) => {
-  if (!(await fs.exists(path))) {
-    throw new Error(`Project path ${path} does not exist`);
-  }
-
-  const raw = await fs.readFile(path, "utf-8");
-  const json = JSON.parse(raw);
-  try {
-    return projectFromJSON(json);
-  } catch (e) {
-    throw new Error(`project at path ${path} is invalid:\n${e}`);
-  }
-};
+const loadWeightOverrides = compatReader(Weights.fromJSON, "Weights");
+const loadProject = compatReader(projectFromJSON, "Project");
 
 export const help: Command = async (args, std) => {
   if (args.length === 0) {
